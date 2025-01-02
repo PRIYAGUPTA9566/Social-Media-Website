@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Social Media{% endblock %}
+
+{% block content %}
+    {% include "modal.html" %}
+    {% include "search.html" %}
+
+    <!-- Home posts code -->
+    <div class="container mt-5">
+        {% for pos in post %}
+            <div class="post-card" id="{{ pos.id }}">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="card mb-4 shadow-sm" style="border-radius: 10px; background-color: aliceblue;">
+                            <img src="{{ pos.image.url }}" alt="Post Image" class="card-img-top" style="border-radius: 10px; height: 300px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="/profile/{{ pos.user }}" class="text-decoration-none text-dark ">@{{ pos.user }}</a>
+                                </h5>
+                                <p class="card-text">{{ pos.caption }}</p>
+                                <p class="text-muted">{{ pos.created_at }}</p>
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="/like-post/{{ pos.id }}" class="btn btn-outline-primary">
+                                        <i class="fas fa-thumbs-up"></i> Like
+                                    </a>
+                                    <span>
+                                        {% if pos.no_of_likes == 0 %}
+                                            <span>0</span>
+                                        {% elif pos.no_of_likes == 1 %}
+                                            <span>Liked by {{ pos.no_of_likes }} person</span>
+                                        {% else %}
+                                            <span>Liked by {{ pos.no_of_likes }} people</span>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

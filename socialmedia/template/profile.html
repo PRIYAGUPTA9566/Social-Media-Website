@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Home - {{user}}-Profile{% endblock %}
+
+{% block content %}
+{% include "edit_profile.html" %}
+{% include "profile_update.html" %}
+{% include "search.html" %}
+
+
+<section class="gradient-custom-2">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-9 col-xl-7"style="background-color: #1abc9c;">
+                <div class="card" >
+                    <div class="rounded-top text-white d-flex flex-row"
+                        style="background:#4DA1A9; height:200px;">
+                        <div class="ms-4  d-flex flex-column" style="width: 150px; height: 100px; margin-top:5rem;">
+                            <img src="{{ user_profile.profileimg.url }}" alt="Profile image"
+                             class="img-fluid img-thumbnail mt-4 mb-2"
+                             style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border: 3px solid white; z-index: 1;">
+
+
+                            {% if user == user_profile.user %}
+                            <button type="button" class="btn btn-outline-dark"
+                                data-mdb-ripple-color="dark" style="z-index: 1; margin: 5px;"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal1"
+                                data-bs-whatever="@getbootstrap">
+                                Edit profile
+                            </button>
+
+                            {% endif %}
+ 
+                        </div>
+                        <div class="ms-3" style="margin-top: 130px; ">
+                            <h5>@{{user_profile.user}}</h5>
+
+                            <p><i class="fa-solid fa-location-dot"></i> {{user_profile.location}}</p>
+
+                        </div>
+                        <div style="margin-inline-start: auto; margin-top: auto;background:white;">
+                        <form action="/follow" method="POST">
+                            {% csrf_token %}    
+                            {% if user != user_profile.user %}
+                                <input type="hidden" value="{{ user.username }}" name="follower" />
+                                <input type="hidden" value="{{ user_object.username }}" name="user" />
+                                <button type="submit" class="btn btn-outline-dark">
+                                    {{ follow_unfollow }}
+                                </button>
+
+                            {% endif %}
+</form>
+                        </div>
+
+                    </div>
+                    <div class="p-4 text-black" style="background-color: #f8f9fa;">
+                        <div class="d-flex justify-content-end text-center py-1">
+                            <div>
+                                <p class="mb-1 h5">{{user_post_length}}</p>
+                                <p class="small text-muted mb-0">Photos</p>
+                            </div>
+                            <div class="px-3">
+                                <p class="mb-1 h5"><a href="{% url 'followers_list' user_profile.user.username %}" class="text-decoration-none">
+                                    {{ user_followers }}
+                                </a></p>
+                                <p class="small text-muted mb-0">Followers</p>
+                            </div>
+                            <div>
+                                <p class="mb-1 h5">
+                                    <a href="{% url 'following_list' %}" class="text-decoration-none">
+                                        {{ user_following }}
+                                    </a>
+                                </p>
+                                <p class="small text-muted mb-0">Following</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-4 text-black">
+                        <div class="mb-5">
+                            <p class="lead fw-normal mb-1">About</p>
+                            <div class="p-4" style="background-color: #f8f9fa;">
+                                <p class="font-italic mb-1">{{user_profile.bio}}</p>
+                            </div>
+
+                        </div>
+                        <div class="mb-5">
+                            <p class="lead fw-normal mb-1">Photos</p>
+
+
+
+                        </div>
+                        <div class="image-grid">
+                            {% for pos in user_posts %}
+                            <div class="card image-item">
+                                <img src="{{ pos.image.url }}" class="card-img-top" alt="Photo"
+                                style="width: 100%; height: 300px; object-fit: cover; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+                           
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{pos.caption}}</h5>
+                                    {% if user == user_profile.user %} <a href=" /delete/{{pos.id}} "><i
+                                            class="fa-solid fa-trash"></i></a>
+
+
+                                    {% endif %}
+                                </div>
+                            </div>
+
+
+                            {% endfor %}
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    
+    {% endblock %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const followButton = document.getElementById('follow-btn');
+            const followForm = document.getElementById('follow-form');
+            
+            // Handle button click
+            followButton.addEventListener('click', function(e) {
+                e.preventDefault();  // Prevent form submission
+        
+                // Toggle follow/unfollow behavior based on current state
+                const currentText = followButton.innerText;
+        
+                // If button text is "Follow", we want to send the follow request
+                if (currentText === 'Follow') {
+                    followButton.innerText = 'Unfollow';
+                    followForm.action = '/follow';  // Follow route
+                    followForm.submit();
+                }
+                // If button text is "Unfollow", we want to send the unfollow request
+                else if (currentText === 'Unfollow') {
+                    followButton.innerText = 'Follow';
+                    followForm.action = '/unfollow';  // Unfollow route
+                    followForm.submit();
+                }
+            });
+        });
+        </script>
+
+ 
+
+ 

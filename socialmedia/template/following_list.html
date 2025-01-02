@@ -1,0 +1,99 @@
+ {% extends 'base.html' %}
+
+{% block content %}
+<style>
+    h1 {
+            background-color: #1abc9c; 
+            padding: 1rem; 
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 600;
+            border-bottom: 3px solid #2980b9;
+        }
+</style>
+<!-- Main container for the page -->
+<div class="container mt-3">
+    <div class="card shadow-sm p-4">
+        <h1 class="text-center mb-4 text-white"> You Are Following </h1>
+        <ul class="list-group">
+            {% for user in following_users %} 
+
+                <li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: #79D7BE;">
+                    <!-- Follower's username with a link -->
+                     
+                        <h4 class="mt-2"><img src="{{ profile.profileimg.url }}|default:'/media/blank-profile-picture.png'" 
+                            onerror="this.onerror=null; this.src='/media/blank-profile-picture.png';"
+                            alt="Profile Picture" class="profile-pic"><a href="{% url 'profile' user %}" class="text-decoration-none text-dark">
+                        {{ user.username }}
+                    </a></h4>
+                    <div class="account-actions ">
+                        <a href="{% url 'profile' user %}" class="btn btn-primary">View Profile</a> 
+                        
+                    </div>
+                </li>
+            {% empty %}
+                <div class="alert alert-info text-center">
+                    You are not following anyone yet.
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Optional: CSS styling -->
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .card {
+        background-color: #ffffff;
+        border: none;
+        border-radius: 10px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .list-group-item {
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .list-group-item:hover {
+        background-color: #e9ecef;
+        transform: translateY(-2px);
+    }
+
+    .rounded-circle {
+        object-fit: cover;
+    }
+
+    .alert-info {
+        font-size: 1.2rem;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2rem;
+        }
+
+        .list-group-item {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .list-group-item img {
+            margin-bottom: 10px;
+        }
+    }
+</style>
+{% endblock %}

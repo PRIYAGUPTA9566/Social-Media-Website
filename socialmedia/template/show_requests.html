@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Follow Requests - Professional Version{% endblock %}
+
+{% block content %}
+<style>
+    h2 {
+        background-color: #1abc9c;
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        border-bottom: 4px solid #16a085;
+        letter-spacing: 0.05rem;
+    }
+
+    .card {
+        background-color:#A1EEBD; 
+        border: 1px solid #e0e4e8;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        background-color: #E5D9F2;
+    }
+    .card-body img {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #f0f2f5;
+    }
+
+    .btn-success:hover {
+        background-color: #27ae60;
+        border-color: #27ae60;
+    }
+
+    .btn-danger:hover {
+        background-color: #e74c3c;
+        border-color: #e74c3c;
+    }
+
+    .modal-content {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @media (max-width: 768px) {
+        h2 {
+            font-size: 1.4rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<div class="container mt-2">
+    <h2 class="text-center mb-5" style="font-family: 'Poppins', sans-serif;">Follow Requests</h2>
+    <div class="row">
+        {% if follow_requests %}
+            {% for request in follow_requests %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm" style=" border-radius: 12px; overflow: hidden;">
+                    <div class="card-body text-center">
+                        <img src="{{ request.sender.profile.profileimg.url }}|default:'/media/blank-profile-picture.png'" 
+                             onerror="this.onerror=null; this.src='/media/blank-profile-picture.png';" 
+                             alt="Profile Picture"
+                             class="rounded-circle mb-3" 
+                             style="width: 90px; height: 90px; object-fit: cover;">
+                        <h5 class="card-title" style="font-family: 'Roboto', sans-serif; font-weight: bold; font-size: 1.2rem;">
+                            <a href="/profile/{{ request.sender.username }}" style="color: black; text-decoration:none;">
+                                @{{ request.sender.username }}
+                            </a>
+                        </h5>
+                        <div class="d-flex justify-content-around mt-3">
+                            <a href="{% url 'accept_request' request.id %}" class="btn btn-success btn-sm" style="padding: 10px 20px; font-weight: bold;">Accept</a>
+                            <a href="{% url 'decline_request' request.id %}" class="btn btn-danger btn-sm" style="padding: 10px 20px; font-weight: bold;">Decline</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-muted mt-5">No follow requests at the moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Decline Confirmation Modal -->
+<div class="modal fade" id="declineModal" tabindex="-1" role="dialog" aria-labelledby="declineModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="border-radius: 10px; background-color: #fdfdfd;">
+            <div class="modal-header" style="border-bottom: 1px solid #eee;">
+                <h5 class="modal-title" id="declineModalLabel" style="font-weight: bold; color: #2c3e50;">Are you sure you want to decline this follow request?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="color: #7f8c8d;">
+                This action cannot be undone. Are you certain you want to decline the request?
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #eee;">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding: 10px 20px;">Cancel</button>
+                <form id="declineForm" method="POST" action="" style="display: inline-block;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" style="padding: 10px 20px;">Decline</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

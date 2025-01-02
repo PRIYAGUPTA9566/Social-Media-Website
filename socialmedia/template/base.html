@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/cb792c0850.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>{% block title %}Social Media{% endblock %}</title>
+
+    <style>
+        /* Custom styles for the sidebar */
+        .sidebar {
+            background-color: #638C6D;
+            height: 100vh;
+            color: black;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            padding-top: 20px;
+            z-index: 1000;
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .sidebar .nav-link { 
+            font-size: 16px;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #ddd;
+            color: black !important;
+        } 
+        .sidebar .ft:hover { 
+            color: black !important;
+        } 
+        main {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                height: auto;
+                width: 100%;
+            }
+            main {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="sidebar col-md-2 d-none d-md-block">
+                <div class="text-center mt-3">
+                    <!-- <img src="{{ profile.profileimg.url }}|default:'/media/blank-profile-picture.png'" 
+                         onerror="this.src='/media/blank-profile-picture.png';"
+                         alt="Profile Picture" class="profile-pic"> -->
+                         {% if profile.profileimg %}
+                         <img src="{{ profile.profileimg.url }}" 
+                         
+                              onerror="this.src='/media/blank-profile-picture.png';" 
+                              alt="Profile Picture" class="profile-pic">
+                     {% else %}
+                         <img src="/media/blank-profile-picture.png" 
+                              alt="Profile Picture" class="profile-pic">
+                     {% endif %}
+                     
+                    <h4 class="mt-2"><a href="/profile/{{ user }}" class="text-decoration-none text-dark text-white">@{{ user }}</a></h4>
+                </div>
+                <ul class="nav flex-column mt-4 ">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/home">
+                            <i class="fa-solid fa-house mr-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/explore">
+                            <i class="fa-solid fa-compass mr-1"></i> Explore
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/search-results">
+                            <i class="fa-solid fa-magnifying-glass mr-1"></i> Search
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/show_requests">
+                            <i class="fa-solid fa-list mr-1 "></i> Show Request
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="fa-solid fa-circle-plus mr-1 "></i> Create Post
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/profile/{{ user }}">
+                            <i class="fa-solid fa-user mr-1 "></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/logoutt">
+                            <i class="fa-solid fa-right-from-bracket mr-1 "></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main content area -->
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
